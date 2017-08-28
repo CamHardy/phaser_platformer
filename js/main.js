@@ -39,6 +39,11 @@ Hero.prototype.jump = function () {
     return canJump;
 };
 
+Hero.prototype.bounce = function () {
+	const BOUNCE_SPEED = 200;
+	this.body.velocity.y = -BOUNCE_SPEED;
+};
+
 // inherit from Phaser.Sprite
 Spider.prototype = Object.create(Phaser.Sprite.prototype);
 Spider.prototype.constructor = Spider;
@@ -51,6 +56,14 @@ Spider.prototype.update = function () {
 	else if (this.body.touching.left || this.body.blocked.left) {
 		this.body.velocity.x = Spider.SPEED; // turn right
 	}
+};
+
+Spider.prototype.die = function () {
+	this.body.enable = false;
+
+	this.animations.play('die').onComplete.addOnce(function () {
+		this.kill();
+	}, this);
 };
 
 
@@ -85,13 +98,15 @@ function preload() {
     game.load.spritesheet('coin', 'assets/images/coin_animated.png', 22, 22);
     game.load.spritesheet('spider', 'assets/images/spider.png', 42, 32);
     game.load.audio('sfx:coin', 'assets/audio/coin.wav');
+    game.load.audio('sfx:stomp', 'assets/audio/stomp.wav');
 }
 
 function create() {
     // create sound entities
     sfx = {
         jump: game.add.audio('sfx:jump'),
-        coin: game.add.audio('sfx:coin')
+        coin: game.add.audio('sfx:coin'),
+        stomp: game.add.audio('sfx:stomp')
     };
 	game.add.image(0, 0, 'background');
 	_loadLevel(game.cache.getJSON('level:1'));
@@ -164,6 +179,7 @@ function _handleCollisions() {
     game.physics.arcade.overlap(hero, coins, _onHeroVsCoin)
     game.physics.arcade.collide(spiders, platforms);
     game.physics.arcade.collide(spiders, enemyWalls);
+    game.physics.arcade.overlap(hero, spiders, _onHeroVsEnemy);
 }
 
 function _handleInput() {
@@ -181,6 +197,20 @@ function _handleInput() {
 function _onHeroVsCoin(hero, coin) {
 	sfx.coin.play();
 	coin.kill();
+}
+
+function _onHeroVsEnemy(hero, enemy) {
+	// if hero is falling, the enemy dies
+	if (hero.body.velocity.y > 0) {
+		hero.bounce();
+		sfx.stomp.play();
+		enemy.die()
+	}
+	// otherwise the hero dies
+	else {
+		sfx.stomp.play();
+		game.state.restart();
+	}
 }
 
 // program entry point
