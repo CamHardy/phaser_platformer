@@ -60,12 +60,15 @@ function preload() {
 	game.load.image('grass:1x1', 'assets/images/grass_1x1.png');
 	game.load.image('hero', 'assets/images/hero_stopped.png');
     game.load.audio('sfx:jump', 'assets/audio/jump.wav');
+    game.load.spritesheet('coin', 'assets/images/coin_animated.png', 22, 22);
+    game.load.audio('sfx:coin', 'assets/audio/coin.wav');
 }
 
 function create() {
     // create sound entities
     sfx = {
-        jump: game.add.audio('sfx:jump')
+        jump: game.add.audio('sfx:jump'),
+        coin: game.add.audio('sfx:coin')
     };
 	game.add.image(0, 0, 'background');
 	_loadLevel(game.cache.getJSON('level:1'));
@@ -79,9 +82,11 @@ function update() {
 function _loadLevel(data) {
     // create all the groups/layers that we need
     platforms = game.add.group();
+    coins = game.add.group();
 
-	// spawn all platforms
+	// spawn all platforms and coins
 	data.platforms.forEach(_spawnPlatform);
+	data.coins.forEach(_spawnCoin);
 
 	// spawn hero and enemies
 	_spawnCharacters({hero: data.hero});
@@ -98,6 +103,15 @@ function _spawnPlatform(platform) {
     sprite.body.immovable = true;
 }
 
+function _spawnCoin(coin) {
+	let sprite = coins.create(coin.x, coin.y, 'coin');
+	sprite.anchor.set(0.5, 0.5);
+	sprite.animations.add('rotate', [0, 1, 2, 1], 6, true); // 6 fps, looped
+	sprite.animations.play('rotate');
+	game.physics.enable(sprite);
+	sprite.body.allowGravity = false;
+}
+
 function _spawnCharacters(data) {
 	// spawn hero
 	hero = new Hero(game, data.hero.x, data.hero.y);
@@ -106,6 +120,7 @@ function _spawnCharacters(data) {
 
 function _handleCollisions() {
     game.physics.arcade.collide(hero, platforms);
+    game.physics.arcade.overlap(hero, coins, _onHeroVsCoin)
 }
 
 function _handleInput() {
@@ -118,4 +133,9 @@ function _handleInput() {
     else {
         hero.move(0);
     }
+}
+
+function _onHeroVsCoin(hero, coin) {
+	sfx.coin.play();
+	coin.kill();
 }
