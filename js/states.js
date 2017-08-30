@@ -25,7 +25,7 @@ function preload() {
 	game.load.image('grass:4x1', 'assets/images/grass_4x1.png');
 	game.load.image('grass:2x1', 'assets/images/grass_2x1.png');
 	game.load.image('grass:1x1', 'assets/images/grass_1x1.png');
-	game.load.image('hero', 'assets/images/hero_stopped.png');
+	game.load.spritesheet('hero', 'assets/images/hero.png', 36, 42);
 	game.load.image('invisible-wall', 'assets/images/invisible_wall.png');
     game.load.image('icon:coin', 'assets/images/coin_icon.png');
     game.load.image('font:numbers', 'assets/images/numbers.png');
@@ -34,14 +34,16 @@ function preload() {
     game.load.spritesheet('spider', 'assets/images/spider.png', 42, 32);
     game.load.audio('sfx:coin', 'assets/audio/coin.wav');
     game.load.audio('sfx:stomp', 'assets/audio/stomp.wav');
+    game.load.audio('sfx:walk', 'assets/audio/walk.wav');
 }
 
 function create() {
     // create sound entities
     sfx = {
-        jump: game.add.audio('sfx:jump'),
-        coin: game.add.audio('sfx:coin'),
-        stomp: game.add.audio('sfx:stomp')
+        jump: game.add.audio('sfx:jump', 0.5),
+        coin: game.add.audio('sfx:coin', 0.5),
+        stomp: game.add.audio('sfx:stomp', 0.5),
+        walk: game.add.audio('sfx:walk')
     };
 	game.add.image(0, 0, 'background');
 	_loadLevel(game.cache.getJSON('level:1'));

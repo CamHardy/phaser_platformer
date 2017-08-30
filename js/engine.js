@@ -66,12 +66,17 @@ function _handleCollisions() {
 function _handleInput() {
 	if (keys.left.isDown) {
 		hero.move(-1);
+		if (!sfx.walk.isPlaying) {
+			sfx.walk.play();
+		}
 	}
 	else if (keys.right.isDown) {
 		hero.move(1);
+		sfx.walk.stop();
 	}
     else {
         hero.move(0);
+		sfx.walk.stop();
     }
 }
 
