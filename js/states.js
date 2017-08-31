@@ -14,6 +14,7 @@ function init() {
     });
 
     coinPickupCount = 0;
+    hasKey = false;
 }
 
 function preload() {
@@ -28,12 +29,16 @@ function preload() {
 	game.load.spritesheet('hero', 'assets/images/hero.png', 36, 42);
 	game.load.image('invisible-wall', 'assets/images/invisible_wall.png');
     game.load.image('icon:coin', 'assets/images/coin_icon.png');
+    game.load.image('key', 'assets/images/key.png');
     game.load.image('font:numbers', 'assets/images/numbers.png');
-    game.load.audio('sfx:jump', 'assets/audio/jump.wav');
     game.load.spritesheet('coin', 'assets/images/coin_animated.png', 22, 22);
     game.load.spritesheet('spider', 'assets/images/spider.png', 42, 32);
+    game.load.spritesheet('door', 'assets/images/door.png', 42, 66);
+    game.load.audio('sfx:jump', 'assets/audio/jump.wav');
     game.load.audio('sfx:coin', 'assets/audio/coin.wav');
     game.load.audio('sfx:stomp', 'assets/audio/stomp.wav');
+    game.load.audio('sfx:key', 'assets/audio/key.wav');
+    game.load.audio('sfx:door', 'assets/audio/door.wav');
 }
 
 function create() {
@@ -41,7 +46,9 @@ function create() {
     sfx = {
         jump: game.add.audio('sfx:jump', 0.5),
         coin: game.add.audio('sfx:coin', 0.5),
-        stomp: game.add.audio('sfx:stomp', 0.5)
+        stomp: game.add.audio('sfx:stomp', 0.5),
+        key: game.add.audio('sfx:key', 0.5),
+        door: game.add.audio('sfx:door', 0.5)
     };
 	game.add.image(0, 0, 'background');
 	_loadLevel(game.cache.getJSON('level:1'));

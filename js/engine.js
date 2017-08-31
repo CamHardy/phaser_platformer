@@ -1,5 +1,6 @@
 function _loadLevel(data) {
     // create all the groups/layers that we need
+    bgDecoration = game.add.group();
     platforms = game.add.group();
     coins = game.add.group();
     spiders = game.add.group();
@@ -9,6 +10,10 @@ function _loadLevel(data) {
 	// spawn all platforms and coins
 	data.platforms.forEach(_spawnPlatform);
 	data.coins.forEach(_spawnCoin);
+
+	// spawn exit door and key
+	_spawnDoor(data.door.x, data.door.y);
+	_spawnKey(data.key.x, data.key.y);
 
 	// spawn hero and enemies
 	_spawnCharacters({hero: data.hero, spiders: data.spiders});
@@ -55,12 +60,30 @@ function _spawnCharacters(data) {
 	});
 }
 
+function _spawnDoor(x, y) {
+	door = bgDecoration.create(x, y, 'door');
+	door.anchor.setTo(0.5, 1);
+	game.physics.enable(door);
+	door.body.allowGravity = false;
+}
+
+function _spawnKey(x, y) {
+	key = bgDecoration.create(x, y, 'key');
+	key.anchor.set(0.5, 0.5);
+	game.physics.enable(key);
+	key.body.allowGravity = false;
+}
+
 function _handleCollisions() {
     game.physics.arcade.collide(hero, platforms);
     game.physics.arcade.overlap(hero, coins, _onHeroVsCoin)
     game.physics.arcade.collide(spiders, platforms);
     game.physics.arcade.collide(spiders, enemyWalls);
     game.physics.arcade.overlap(hero, spiders, _onHeroVsEnemy);
+    game.physics.arcade.overlap(hero, key, _onHeroVsKey);
+    game.physics.arcade.overlap(hero, door, _onHeroVsDoor, function (hero, door) {
+    	return hasKey && hero.body.touching.down;
+    });
 }
 
 function _handleInput() {
@@ -93,6 +116,18 @@ function _onHeroVsEnemy(hero, enemy) {
 		sfx.stomp.play();
 		game.state.restart();
 	}
+}
+
+function _onHeroVsKey(hero, key) {
+	sfx.key.play();
+	key.kill();
+	hasKey = true;
+}
+
+function _onHeroVsDoor(hero, door) {
+	sfx.door.play();
+	game.state.restart();
+	//TODO: go to the next level instead
 }
 
 function _createHud() {
