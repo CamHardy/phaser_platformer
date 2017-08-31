@@ -1,13 +1,22 @@
 function Hero(game, x, y) {
-	// call Phaser.Sprite constructor
 	Phaser.Sprite.call(this, game, x, y, 'hero');
+
+    // anchor point
 	this.anchor.set(0.5, 0.5);
+
+    // animations
     this.animations.add('stop', [0]);
     this.animations.add('run', [1, 2], 8, true);
     this.animations.add('jump', [3]);
     this.animations.add('fall', [4]);
+    this.animations.add('die', [5, 6, 5, 6, 5, 6, 5, 6], 12);
+
+    // physics properties
     this.game.physics.enable(this);
     this.body.collideWorldBounds = true;
+    
+    this.currentAnimation = 'stop'; // default animation
+    this.alive = true;
 }
 
 // inherit from Phaser.Sprite
@@ -29,7 +38,7 @@ Hero.prototype.move = function (direction) {
 
 Hero.prototype.jump = function () {
     const JUMP_SPEED = 600;
-    let canJump = this.body.touching.down;
+    let canJump = this.body.touching.down && this.alive;
     
     if (canJump) {
         this.body.velocity.y = -JUMP_SPEED;
@@ -43,25 +52,43 @@ Hero.prototype.bounce = function () {
 	this.body.velocity.y = -BOUNCE_SPEED;
 };
 
+Hero.prototype.die = function () {
+    this.alive = false;
+    this.body.enable = false;
+
+    this.animations.play('die').onComplete.addOnce(function () {
+        this.kill();
+    }, this);
+}
+
 Hero.prototype.update = function () {
-    let currentAnimation = 'stop'; // default animation
+    // dead
+    if(!this.alive) {
+        this.currentAnimation = 'die';
+    }
 
     // jumping
-    if (this.body.velocity.y < 0) {
-        currentAnimation = 'jump';
+    else if (this.body.velocity.y < 0) {
+        this.currentAnimation = 'jump';
     }
 
     // falling
     else if (this.body.velocity.y >= 0 && !this.body.touching.down) {
-        currentAnimation = 'fall';
+        this.currentAnimation = 'fall';
     }
 
+    // running
     else if (this.body.velocity.x !== 0 && this.body.touching.down) {
-        currentAnimation = 'run';
+        this.currentAnimation = 'run';
+    }
+
+    // standing
+    else {
+        this.currentAnimation = 'stop';
     }
 
     // update the sprite animation if necessary
-    if (this.animations.name !== currentAnimation) {
-        this.animations.play(currentAnimation);
+    if (this.animations.name !== this.currentAnimation) {
+        this.animations.play(this.currentAnimation);
     }
 }
