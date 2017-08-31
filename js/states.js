@@ -34,7 +34,6 @@ function preload() {
     game.load.spritesheet('spider', 'assets/images/spider.png', 42, 32);
     game.load.audio('sfx:coin', 'assets/audio/coin.wav');
     game.load.audio('sfx:stomp', 'assets/audio/stomp.wav');
-    game.load.audio('sfx:walk', 'assets/audio/walk.wav');
 }
 
 function create() {
@@ -42,8 +41,7 @@ function create() {
     sfx = {
         jump: game.add.audio('sfx:jump', 0.5),
         coin: game.add.audio('sfx:coin', 0.5),
-        stomp: game.add.audio('sfx:stomp', 0.5),
-        walk: game.add.audio('sfx:walk')
+        stomp: game.add.audio('sfx:stomp', 0.5)
     };
 	game.add.image(0, 0, 'background');
 	_loadLevel(game.cache.getJSON('level:1'));

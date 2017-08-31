@@ -17,13 +17,21 @@ Hero.prototype.constructor = Hero;
 Hero.prototype.move = function (direction) {
 	const SPEED = 200;
     this.body.velocity.x = direction * SPEED;
+
+    // make the sprite face the direction of movement
+    if (this.body.velocity.x < 0) {
+        this.scale.x = -1;
+    }
+    else if (this.body.velocity.x > 0) {
+        this.scale.x = 1;
+    }
 };
 
 Hero.prototype.jump = function () {
     const JUMP_SPEED = 600;
     let canJump = this.body.touching.down;
     
-    if(canJump) {
+    if (canJump) {
         this.body.velocity.y = -JUMP_SPEED;
     }
 
