@@ -61,4 +61,5 @@ function update() {
 	_handleInput();
     coinFont.text = `x${coinPickupCount}`;
     keyIcon.frame = hasKey ? 1 : 0;
+    door.frame = hasKey ? 1 : 0;
 }
