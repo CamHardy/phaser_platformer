@@ -72,6 +72,12 @@ function _spawnKey(x, y) {
 	key.anchor.set(0.5, 0.5);
 	game.physics.enable(key);
 	key.body.allowGravity = false;
+	key.y -= 3;
+	game.add.tween(key)
+		.to({y: key.y + 6}, 800, Phaser.Easing.Sinusoidal.InOut)
+		.yoyo(true)
+		.loop()
+		.start();
 }
 
 function _handleCollisions() {
@@ -131,15 +137,20 @@ function _onHeroVsDoor(hero, door) {
 }
 
 function _createHud() {
+	keyIcon = game.make.image(0, 19, 'icon:key');
+	keyIcon.anchor.set(0, 0.5);
+	
 	const NUMBERS_STR = '0123456789X ';
 	coinFont = game.add.retroFont('font:numbers', 20, 26, NUMBERS_STR, 6);
-	let coinIcon = game.make.image(0, 0, 'icon:coin');
+	let coinIcon = game.make.image(keyIcon.width + 7, 0, 'icon:coin');
+	
 
 	let coinScoreImg = game.make.image(coinIcon.x + coinIcon.width, coinIcon.height / 2, coinFont);
 	coinScoreImg.anchor.set(0, 0.5);
 
 	hud = game.add.group();
 	hud.add(coinIcon);
+	hud.add(keyIcon);
 	hud.position.set(10, 10);
 	hud.add(coinScoreImg);
 }

@@ -34,6 +34,7 @@ function preload() {
     game.load.spritesheet('coin', 'assets/images/coin_animated.png', 22, 22);
     game.load.spritesheet('spider', 'assets/images/spider.png', 42, 32);
     game.load.spritesheet('door', 'assets/images/door.png', 42, 66);
+    game.load.spritesheet('icon:key', 'assets/images/key_icon.png', 34, 30);
     game.load.audio('sfx:jump', 'assets/audio/jump.wav');
     game.load.audio('sfx:coin', 'assets/audio/coin.wav');
     game.load.audio('sfx:stomp', 'assets/audio/stomp.wav');
@@ -59,4 +60,5 @@ function update() {
     _handleCollisions();
 	_handleInput();
     coinFont.text = `x${coinPickupCount}`;
+    keyIcon.frame = hasKey ? 1 : 0;
 }
