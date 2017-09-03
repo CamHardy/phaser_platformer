@@ -15,9 +15,6 @@ PlayState.init = function (data) {
 };
 
 PlayState.create = function () {
-	// fade in from black
-	this.camera.flash('#000000');
-
 	// create sfx
 	sfx = {
 		jump: game.add.audio('sfx:jump', 0.5),
@@ -44,6 +41,9 @@ PlayState.update = function () {
 };
 
 PlayState._loadLevel = function (data) {
+	// fade in from black
+	game.camera.flash('#000000');
+
     // create all the groups/layers that we need
     bgDecoration = game.add.group();
     platforms = game.add.group();
@@ -180,7 +180,12 @@ PlayState._onHeroVsEnemy = function (hero, enemy) {
 	// otherwise the hero dies
 	else {
 		sfx.stomp.play();
-		game.state.restart(true, false, {level: level});
+		hero.die();
+		game.camera.fade('#000000');
+		game.camera.onFadeComplete.addOnce(function () {
+			game.state.restart(true, false, {level: level});
+		});
+		enemy.body.touching = enemy.body.wasTouching;
 	}
 };
 
@@ -197,7 +202,10 @@ PlayState._onHeroVsDoor = function (hero, door) {
 	// play 'enter door' animation and load next level
 	game.add.tween(hero)
 		.to({x: door.x, alpha: 0}, 500, null, true);
-	game.state.start('play', true, false, {level: level + 1});
+	game.camera.fade('#000000');
+	game.camera.onFadeComplete.addOnce(function () {
+		game.state.start('play', true, false, {level: level + 1});
+	});
 };
 
 PlayState._createHud = function () {
