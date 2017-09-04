@@ -12,7 +12,7 @@ function Hero(game, x, y) {
     this.animations.add('die', [5, 6, 5, 6, 5, 6, 5, 6], 12);
 
     // physics properties
-    this.game.physics.enable(this);
+    game.physics.enable(this);
     this.body.collideWorldBounds = true;
     
     this.currentAnimation = 'stop'; // default animation

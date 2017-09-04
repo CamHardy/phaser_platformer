@@ -12,7 +12,7 @@ function Spider(game, x, y) {
 	this.animations.play('crawl');
 
 	// physics properties
-	this.game.physics.enable(this);
+	game.physics.enable(this);
 	this.body.collideWorldBounds = true;
 	this.body.velocity.x = Spider.SPEED;
 }

@@ -56,6 +56,11 @@ PlayState._loadLevel = function (data) {
 	data.platforms.forEach(this._spawnPlatform, this);
 	data.coins.forEach(this._spawnCoin, this);
 
+	// spawn decorations
+	data.decoration.forEach(function (deco) {
+		bgDecoration.add(game.add.image(deco.x, deco.y, 'decoration', deco.frame));
+	});
+
 	// spawn exit door and key
 	this._spawnDoor(data.door.x, data.door.y);
 	this._spawnKey(data.key.x, data.key.y);
@@ -181,7 +186,9 @@ PlayState._onHeroVsEnemy = function (hero, enemy) {
 	else {
 		sfx.stomp.play();
 		hero.die();
-		game.camera.fade('#000000');
+		hero.events.onKilled.addOnce(function () {
+			game.camera.fade('#000000');
+		});
 		game.camera.onFadeComplete.addOnce(function () {
 			game.state.restart(true, false, {level: level});
 		});

@@ -29,6 +29,7 @@ LoadState.preload = function () {
     game.load.spritesheet('spider', 'assets/images/spider.png', 42, 32);
     game.load.spritesheet('door', 'assets/images/door.png', 42, 66);
     game.load.spritesheet('icon:key', 'assets/images/key_icon.png', 34, 30);
+    game.load.spritesheet('decoration', 'assets/images/decor.png', 42, 42);
 
     // load audio
     game.load.audio('sfx:jump', 'assets/audio/jump.wav');
@@ -43,6 +44,6 @@ LoadState.create = function () {
 	// create bgm
 	bgm = game.add.audio('bgm');
 	bgm.loopFull();
-	
+
 	game.state.start('play', true, false, {level: 0});
 };
