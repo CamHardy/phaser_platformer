@@ -209,7 +209,7 @@ PlayState._onHeroVsDoor = function (hero, door) {
 	this.sfx.door.play();
 
 	// play 'enter door' animation and load next level
-	tween = game.add.tween(hero)
+	let tween = game.add.tween(hero)
 		.to({x: door.x, alpha: 0}, 500, null, true);
 	tween.onComplete.addOnce(function () {
 		game.camera.fade('#000000');
