@@ -1,3 +1,5 @@
+'use strict';
+
 Spider.SPEED = 100;
 
 function Spider(game, x, y) {

@@ -1,4 +1,6 @@
-LoadState = {};
+'use strict';
+
+var LoadState = {};
 
 LoadState.init = function () {
 	// round pixels (no anti-aliasing)
@@ -42,7 +44,7 @@ LoadState.preload = function () {
 
 LoadState.create = function () {
 	// create bgm
-	bgm = game.add.audio('bgm');
+	let bgm = game.add.audio('bgm');
 	bgm.loopFull();
 
 	game.state.start('play', true, false, {level: 0});
